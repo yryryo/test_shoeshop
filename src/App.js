@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import data from "./components/data.js";
 import Detail from "./components/detail";
-import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
 
 function App() {
   let [shoes] = useState(data);
