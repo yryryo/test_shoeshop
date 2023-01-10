@@ -1,14 +1,16 @@
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import {Navbar, Container, Nav, Row, Cor} from 'react-bootstrap';
-import { useState } from 'react';
+import { Navbar, Container, Nav, Row, Cor } from "react-bootstrap";
+import { useState } from "react";
 
-import data from './data.js';
+import data from "./components/data.js";
+import Detail from "./components/detail";
+import { Routes, Route, Link, useNavigate, Outlet } from "react-router-dom";
 
 function App() {
-
-  let [shoes] = useState(data)
+  let [shoes] = useState(data);
+  let navigate = useNavigate();
 
   return (
     <div className="App">
@@ -16,31 +18,72 @@ function App() {
         <Container>
           <Navbar.Brand href="#home">Shoe shop</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Cart</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/')}}>Home</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/detail')}}>Detail</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
-      <div className='main-bg'></div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-4">
-            <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="80%" />
-            <h4>{shoes[0].title}</h4>
-            <p>{shoes[0].price}</p>
-          </div>
-          <div className="col-md-4">
-            <img src="https://codingapple1.github.io/shop/shoes2.jpg" width="80%" />
-            <h4>{shoes[1].title}</h4>
-            <p>{shoes[1].price}</p>
-          </div>
-          <div className="col-md-4">
-            <img src="https://codingapple1.github.io/shop/shoes3.jpg" width="80%" />
-            <h4>{shoes[2].title}</h4>
-            <p>{shoes[2].price}</p>
-          </div>
-        </div>
-      </div>
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <div className="main-bg"></div>
+              <div className="container">
+                <div className="row">
+                  {shoes.map((a, i) => {
+                    return <Card shoes={shoes[i]} i={i} />;
+                  })}
+                </div>
+              </div>
+            </>
+          }
+        />
+        <Route path="/detail" element={<Detail/>} />
+        <Route path="/about" element={<About/>} >
+          <Route path="member" element={<div>멤버임</div>}></Route>
+          <Route path="location" element={<About/>}></Route>
+        </Route>
+        <Route path="/event" element={<Event/>}>
+          <Route path="one" element={<div>첫 주문 시 양배추즙 서비스</div>}/>
+          <Route path="two" element={<div>생일기념 쿠폰받기</div>}/>
+        </Route>
+        <Route path="*" element={<div>없는 페이지에요</div>} />
+      </Routes>
+    </div>
+  );
+}
+
+function Event(){
+  return(
+    <div>
+      <h4>오늘의 이벤트</h4>
+      <Outlet></Outlet>
+    </div>
+  )
+}
+
+function About(){
+  return(
+    <div>
+      <h4>회사정보임</h4>
+      <Outlet></Outlet>
+    </div>
+  )
+}
+
+function Card(props) {
+  return (
+    <div className="col-md-4">
+      <img
+        src={
+          "https://codingapple1.github.io/shop/shoes" + (props.i + 1) + ".jpg"
+        }
+        width="80%"
+      />
+      <h4>{props.shoes.title}</h4>
+      <p>{props.shoes.price}</p>
     </div>
   );
 }
